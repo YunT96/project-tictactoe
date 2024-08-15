@@ -2,33 +2,39 @@ function Gameboard() {
     const rows = 3;
     const columns = 3;
     const board = [];
+
+    // Create a 2D array of cells
     for (let i = 0; i < rows; i++) {
         board[i] = [];
         for (let j = 0; j < columns; j++) {
             board[i].push(Cell());
         }
     }
+
+    // Return the current state of the board
     const getBoard = () => board;
 
+    // Print the current state of the board
     const printBoard = () => {
         const boardWithCellValues = board.map((row) => row.map((cell) => cell.getValue()))
         console.table(boardWithCellValues);
     };
 
-    const addMarker = (player, row, column) => {
-        board[row][column].placeMarker(player);
+    // Accept a player's token to change the value of the cell
+    const addMarker = (marker, row, column) => {
+        board[row][column].placeMarker(marker);
     };
 
     return { getBoard, printBoard, addMarker };
 }
 
-
+// Create a cell object with a value of ""
 function Cell() {
     let value = "";
 
     // Accept a player's token to change the value of the cell
-    const placeMarker = (player) => {
-        value = player;
+    const placeMarker = (marker) => {
+        value = marker;
     };
 
     // How we will retrieve the current value of this cell through closure
@@ -41,7 +47,10 @@ function Cell() {
 }
 
 function Gamecontroller(playerOneName = "Player 1", playerTwoName = "Player 2") {
+    //Call and create the board
     const board = Gameboard();
+
+    //Initialize players and set token value
     const players = [
         {
             name: playerOneName,
@@ -54,6 +63,7 @@ function Gamecontroller(playerOneName = "Player 1", playerTwoName = "Player 2") 
 
     let currentPlayer = players[0];
 
+   
     const switchPlayer = () => {
         if (currentPlayer === players[0]) {
             currentPlayer = players[1];
@@ -69,12 +79,6 @@ function Gamecontroller(playerOneName = "Player 1", playerTwoName = "Player 2") 
         console.log(`It's ${currentPlayer.name}'s turn!`);
         board.printBoard();
     }
-
-    const playRound = (row, column) => {
-        board.addMarker(currentPlayer.marker, row, column);
-        board.printBoard();
-        switchPlayer();
-    };
 
     const checkForWin = () => {
         const currentBoard = board.getBoard();
@@ -132,9 +136,11 @@ function Gamecontroller(playerOneName = "Player 1", playerTwoName = "Player 2") 
 
     this.playTurn = function () {
         board.printBoard();
+
         console.log(`It's ${currentPlayer.name}'s turn!`);
         let row = parseInt(prompt("Enter row (0-2):"));
         let column = parseInt(prompt("Enter column (0-2):"));
+
         board.addMarker(currentPlayer.marker, row, column);
         if (!checkForWin()) {
             switchPlayer();
@@ -143,8 +149,10 @@ function Gamecontroller(playerOneName = "Player 1", playerTwoName = "Player 2") 
 
     printNewRound();
 
-    return { getCurrentPlayer, playRound, playTurn };
+    return { getCurrentPlayer, playTurn: this.playTurn };
 }
+
+ 
 
 const game = Gamecontroller();
 game.playTurn();
