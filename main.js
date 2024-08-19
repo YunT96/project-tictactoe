@@ -176,14 +176,14 @@ function Gamecontroller(playerOneName = "Player 1", playerTwoName = "Player 2") 
         });
     }
 
-    this.resetButton = document.querySelector(".reset-button");
-    this.resetButton.addEventListener("click", () => {
+    const resetButton = document.querySelector(".reset-button");
+    resetButton.addEventListener("click", () => {
         this.resetController();
-
+        
     });
 
-    this.resetController = function () {
-        this.currentPlayer = players[0];
+    resetController = function () {
+        currentPlayer = players[0];
         board.resetBoard();
         const buttons = document.querySelectorAll(".cell");
         buttons.forEach(button => {
